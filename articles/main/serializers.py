@@ -6,7 +6,7 @@ from django.db.models import Avg
 class VoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vote
-        fields = ["id", "user", "vote"]
+        fields = ["id", "user", "vote", "article"]
 
 
 class ArticleSerializer(serializers.ModelSerializer):
@@ -17,7 +17,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         return obj.vote_set.count()
 
     def get_avarage_vote_score(self, obj):
-        return obj.vote_set.aggregate(Avg("vote", default=3))['vote__avg']
+        return obj.vote_set.aggregate(Avg("vote", default=3))["vote__avg"]
 
     class Meta:
         model = Article

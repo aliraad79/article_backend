@@ -4,12 +4,21 @@ from main.models import Article, Vote
 from main.serializers import ArticleSerializer, VoteSerializer
 
 
-class VoteApiView(
-    generics.ListCreateAPIView,
-):
+class ArticleApiView(generics.ListCreateAPIView):
     """
-    API endpoint that allows users to be viewed or edited.
+    API endpoint that allows users to see articles
     """
 
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
+
+
+class VoteApiView(
+    mixins.UpdateModelMixin, mixins.CreateModelMixin, generics.GenericAPIView
+):
+    """
+    API endpoint allows user to vote and update vote
+    """
+
+    queryset = Vote.objects.all()
+    serializer_class = VoteSerializer

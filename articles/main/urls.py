@@ -1,7 +1,7 @@
 from django.urls import path
-from main.views import VoteApiView
+from main.views import ArticleApiView, VoteApiView
 
 urlpatterns = [
-    path("v1/articles/", VoteApiView.as_view())
-    # path("v1/articles/<int:article_id>/", admin.site.urls)
+    path("v1/articles/", ArticleApiView.as_view()),
+    path("v1/articles/vote", VoteApiView.as_view()),
 ]
