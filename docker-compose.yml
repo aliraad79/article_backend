@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+  # web:
+  #   build: articles
+  #   ports:
+  #     - "8000:5000"
+
+  redis:
+    image: "redis:alpine"
+  DB:
+    image: "postgres:15.4"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=articles
+    ports:
+      - "5432:5432"
