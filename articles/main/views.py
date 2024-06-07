@@ -1,3 +1,15 @@
-from django.shortcuts import render
+from rest_framework import mixins
+from rest_framework import generics
+from main.models import Article, Vote
+from main.serializers import ArticleSerializer, VoteSerializer
 
-# Create your views here.
+
+class VoteApiView(
+    generics.ListCreateAPIView,
+):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer

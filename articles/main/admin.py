@@ -1,3 +1,17 @@
 from django.contrib import admin
+from main.models import Article, User, Vote
 
-# Register your models here.
+
+@admin.register(Vote)
+class VoteAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Article)
+class ArticleAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    pass
