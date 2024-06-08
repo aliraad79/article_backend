@@ -6,14 +6,12 @@ ENV PYTHONFAULTHANDLER=1 \
   PIP_NO_CACHE_DIR=off \
   PIP_DISABLE_PIP_VERSION_CHECK=on \
   PIP_DEFAULT_TIMEOUT=100 \
-  # Poetry's configuration:
-  POETRY_NO_INTERACTION=1 \
-  POETRY_VIRTUALENVS_CREATE=false \
-  POETRY_CACHE_DIR='/var/cache/pypoetry' \
-  POETRY_HOME='/usr/local' \
-  POETRY_VERSION=1.8.3
+  POETRY_VERSION=1.4.0 \
+  POETRY_HOME=/opt/poetry \
+  POETRY_VIRTUALENVS_CREATE=false
+ENV PATH="$POETRY_HOME/bin:$PATH"
 
-# System deps:
+# Prepare poetry
 RUN curl -sSL https://install.python-poetry.org | python3 -
 
 # Copy only requirements to cache them in docker layer
@@ -21,8 +19,12 @@ WORKDIR /code
 COPY poetry.lock pyproject.toml /code/
 
 # Project initialization:
-RUN poetry install --no-interaction --no-ansi
+RUN poetry install --no-root
+
+# Copy the Django project files
+COPY . articles/
+WORKDIR /code/articles
 
 EXPOSE 8000
-# start server  
-CMD python manage.py runserver
+# start server
+CMD ["sh", "entrypoint.sh"]
