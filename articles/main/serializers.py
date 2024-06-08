@@ -1,14 +1,12 @@
 from rest_framework import serializers
 from main.models import Article, Vote
-
-from django_redis import get_redis_connection
-from .utils import get_article_avg_redis_key, get_article_count_redis_key
+from main.services import ArticleRedisService
 
 
 class VoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vote
-        fields = ["id", "user", "vote", "article"]
+        fields = ["user", "vote", "article"]
 
 
 class ArticleSerializer(serializers.ModelSerializer):
@@ -16,17 +14,11 @@ class ArticleSerializer(serializers.ModelSerializer):
     avarage_vote_score = serializers.SerializerMethodField()
 
     def get_number_of_votes(self, obj: Article):
-        redis_score = get_redis_connection().get(get_article_avg_redis_key(obj.id))
-        if redis_score is not None:
-            return redis_score
-        return 3
+        return ArticleRedisService().get(obj).count
 
     def get_avarage_vote_score(self, obj: Article):
-        redis_score = get_redis_connection().get(get_article_count_redis_key(obj.id))
-        if redis_score is not None:
-            return redis_score
-        return 0
+        return ArticleRedisService().get(obj).avg
 
     class Meta:
         model = Article
-        fields = ["id", "title", "text", "number_of_votes", "avarage_vote_score"]
+        fields = ["id", "title", "number_of_votes", "avarage_vote_score"]
