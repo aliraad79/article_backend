@@ -2,6 +2,7 @@ from rest_framework import generics
 from main.models import Article, Vote, User
 from main.serializers import ArticleSerializer, VoteSerializer, UserSerializer
 from main.services import ArticleRedisService, DetectAnomaly
+from django.db.models import Avg
 
 
 class ArticleApiView(generics.ListCreateAPIView):
@@ -33,9 +34,9 @@ class VoteApiView(generics.CreateAPIView, generics.UpdateAPIView):
 
     def perform_create(self, serializer: VoteSerializer):
         new_vote = serializer.save()
-        related_article = serializer.validated_data["article"]
-        vote = serializer.validated_data["vote"]
-        ArticleRedisService.update(related_article, vote)
+        article = serializer.validated_data["article"]
+        article.number_of_scores = article.vote_set.count()
+        article.avg_scores = article.vote_set.aggregate(Avg("vote"))["vote__avg"]
         DetectAnomaly().detect(new_vote)
 
     def get_object(self):

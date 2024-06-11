@@ -12,6 +12,8 @@ class User(models.Model):
 class Article(models.Model):
     title = models.CharField(max_length=256)
     text = models.TextField()
+    number_of_scores = models.PositiveBigIntegerField(default=0)
+    avg_scores = models.FloatField(default=2.5)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

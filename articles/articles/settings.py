@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # setup env
 env = environ.Env(
     DEBUG=(bool, False),
-    SECRET_KEY=(str,"very_safe"),
+    SECRET_KEY=(str, "very_safe"),
     DB_NAME=(str, "articles"),
     DB_USERNAME=(str, "postgres"),
     DB_PASSWORD=(str, "postgres"),
@@ -44,7 +44,9 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.cache.UpdateCacheMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "django.middleware.cache.FetchFromCacheMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
