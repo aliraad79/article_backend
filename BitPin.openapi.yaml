@@ -1,0 +1,89 @@
+openapi: 3.1.0
+info:
+  title: BitPin
+  description: ''
+  version: 1.0.0
+tags: []
+paths:
+  /api/v1/articles:
+    get:
+      summary: See Articles
+      deprecated: false
+      description: ''
+      tags: []
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+    post:
+      summary: Create Article
+      deprecated: false
+      description: ''
+      tags: []
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+  /api/v1/users:
+    post:
+      summary: Create User
+      deprecated: false
+      description: ''
+      tags: []
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+  /api/v1/articles/vote:
+    post:
+      summary: Add vote
+      deprecated: false
+      description: ''
+      tags: []
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+    patch:
+      summary: Update vote
+      deprecated: false
+      description: ''
+      tags: []
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+components:
+  schemas: {}
+  securitySchemes: {}
+servers: []
