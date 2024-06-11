@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from main.models import Article, Vote
+from main.models import Article, Vote, User
 from main.services import ArticleRedisService
 
 
@@ -7,6 +7,12 @@ class VoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vote
         fields = ["user", "vote", "article"]
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["name"]
 
 
 class ArticleSerializer(serializers.ModelSerializer):

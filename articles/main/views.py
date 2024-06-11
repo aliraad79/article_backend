@@ -1,6 +1,6 @@
 from rest_framework import generics
-from main.models import Article, Vote
-from main.serializers import ArticleSerializer, VoteSerializer
+from main.models import Article, Vote, User
+from main.serializers import ArticleSerializer, VoteSerializer, UserSerializer
 from main.services import ArticleRedisService, DetectAnomaly
 
 
@@ -13,9 +13,16 @@ class ArticleApiView(generics.ListCreateAPIView):
     serializer_class = ArticleSerializer
 
 
-class VoteApiView(
-    generics.CreateAPIView, generics.UpdateAPIView, generics.GenericAPIView
-):
+class UserApiView(generics.ListCreateAPIView):
+    """
+    API endpoint that allows creating user
+    """
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class VoteApiView(generics.CreateAPIView, generics.UpdateAPIView):
     """
     API endpoint allows user to vote and update vote
     """
