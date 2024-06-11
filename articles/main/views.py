@@ -28,7 +28,7 @@ class VoteApiView(
         new_vote = serializer.save()
         related_article = serializer.validated_data["article"]
         vote = serializer.validated_data["vote"]
-        ArticleRedisService().update(related_article, vote)
+        ArticleRedisService.update(related_article, vote)
         DetectAnomaly().detect(new_vote)
 
     def get_object(self):

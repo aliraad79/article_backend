@@ -14,10 +14,10 @@ class ArticleSerializer(serializers.ModelSerializer):
     avarage_vote_score = serializers.SerializerMethodField()
 
     def get_number_of_votes(self, obj: Article):
-        return ArticleRedisService().get(obj).count
+        return ArticleRedisService.get(obj).count
 
     def get_avarage_vote_score(self, obj: Article):
-        return ArticleRedisService().get(obj).avg
+        return ArticleRedisService.get(obj).avg
 
     class Meta:
         model = Article
