@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
@@ -17,6 +18,11 @@ class Article(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def update_statics(self):
+        self.number_of_scores = self.vote_set.count()
+        self.avg_scores = self.vote_set.aggregate(Avg("vote"))["vote__avg"]
+        self.save()
 
     def __str__(self):
         return f"Article_{self.id}"

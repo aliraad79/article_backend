@@ -2,7 +2,6 @@ from rest_framework import generics
 from main.models import Article, Vote, User
 from main.serializers import ArticleSerializer, VoteSerializer, UserSerializer
 from main.services import ArticleRedisService, DetectAnomaly
-from django.db.models import Avg
 
 
 class ArticleApiView(generics.ListCreateAPIView):
@@ -12,6 +11,18 @@ class ArticleApiView(generics.ListCreateAPIView):
 
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
+
+    def post(self, request, *args, **kwargs):
+        ArticleRedisService.evict_articles()
+        return self.create(request, *args, **kwargs)
+
+    def get_queryset(self):
+        cached_articles = ArticleRedisService.get_all()
+        if cached_articles:
+            return cached_articles
+        result = super().get_queryset()
+        ArticleRedisService.set_all_articles(result)
+        return result
 
 
 class UserApiView(generics.ListCreateAPIView):
@@ -34,14 +45,15 @@ class VoteApiView(generics.CreateAPIView, generics.UpdateAPIView):
 
     def perform_create(self, serializer: VoteSerializer):
         new_vote = serializer.save()
-        article = serializer.validated_data["article"]
-        article.number_of_scores = article.vote_set.count()
-        article.avg_scores = article.vote_set.aggregate(Avg("vote"))["vote__avg"]
+        serializer.validated_data["article"].update_statics()
+        ArticleRedisService.evict_articles()
         DetectAnomaly().detect(new_vote)
 
     def get_object(self):
         user = self.request.data["user"]
         article = self.request.data["article"]
+        article.update_statics()
+        ArticleRedisService.evict_articles()
         vote = self.filter_queryset(self.get_queryset()).get(user=user, article=article)
         DetectAnomaly().detect(vote)
         return vote
