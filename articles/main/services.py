@@ -1,5 +1,4 @@
 from django.core.cache import cache
-from main.models import Vote
 
 
 class ArticleRedisService:
@@ -17,9 +16,3 @@ class ArticleRedisService:
     def evict_articles(cls):
         return cache.delete(cls.CACHE_NAME)
 
-
-class DetectAnomaly:
-    @classmethod
-    def detect(self, vote: Vote):
-        print(vote)
-        print("Anomaly not detected")

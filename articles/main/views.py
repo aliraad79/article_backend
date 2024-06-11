@@ -1,7 +1,8 @@
 from rest_framework import generics
 from main.models import Article, Vote, User
 from main.serializers import ArticleSerializer, VoteSerializer, UserSerializer
-from main.services import ArticleRedisService, DetectAnomaly
+from main.services import ArticleRedisService
+from main.tasks import detect_anomalies
 
 
 class ArticleApiView(generics.ListCreateAPIView):
@@ -44,16 +45,20 @@ class VoteApiView(generics.CreateAPIView, generics.UpdateAPIView):
     lookup_field = "article"
 
     def perform_create(self, serializer: VoteSerializer):
-        new_vote = serializer.save()
-        serializer.validated_data["article"].update_statics()
+        super().perform_create(serializer)
+        article = serializer.validated_data["article"]
+        article.update_statics()
         ArticleRedisService.evict_articles()
-        DetectAnomaly().detect(new_vote)
+        detect_anomalies.delay(article.id)
+
+    def perform_update(self, serializer: VoteSerializer):
+        super().perform_update(serializer)
+        article = serializer.validated_data["article"]
+        article.update_statics()
+        ArticleRedisService.evict_articles()
+        detect_anomalies.delay(article.id)
 
     def get_object(self):
         user = self.request.data["user"]
         article = self.request.data["article"]
-        article.update_statics()
-        ArticleRedisService.evict_articles()
-        vote = self.filter_queryset(self.get_queryset()).get(user=user, article=article)
-        DetectAnomaly().detect(vote)
-        return vote
+        return self.filter_queryset(self.get_queryset()).get(user=user, article=article)
