@@ -4,7 +4,7 @@ from main.models import Article, User, Vote
 
 @admin.register(Vote)
 class VoteAdmin(admin.ModelAdmin):
-    list_display = ["id", "user", "article", "vote"]
+    list_display = ["id", "user", "article", "score"]
 
 
 @admin.register(Article)

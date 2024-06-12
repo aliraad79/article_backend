@@ -6,19 +6,19 @@ from django.db.models import Avg, StdDev, Count
 @shared_task
 def detect_anomalies(article_id):
     votes = Vote.objects.filter(article=article_id)
-    avg = votes.aggregate(Avg("vote"))["vote__avg"]
-    stddev = votes.aggregate(StdDev("vote"))["vote__stddev"]
-    count = votes.aggregate(Count("vote"))["vote__count"]
+    avg = votes.aggregate(Avg("score"))["score__avg"]
+    stddev = votes.aggregate(StdDev("score"))["score__stddev"]
+    count = votes.aggregate(Count("score"))["score__count"]
 
     # not a attack
     if count < 100:
         return False
 
     anomalies = []
-    threshold = 3
+    threshold = 1
     for vote in votes:
         if stddev > 0:
-            z_score = (vote.vote - avg) / stddev
+            z_score = (vote.score - avg) / stddev
             if abs(z_score) > threshold:
                 anomalies.append(vote)
 

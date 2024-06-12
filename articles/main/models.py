@@ -20,7 +20,7 @@ class Article(models.Model):
 
     def update_statics(self):
         self.number_of_scores = self.vote_set.count()
-        self.avg_scores = self.vote_set.aggregate(Avg("vote"))["vote__avg"]
+        self.avg_scores = self.vote_set.aggregate(Avg("score"))["score__avg"]
         self.save()
 
     def __str__(self):
@@ -30,7 +30,7 @@ class Article(models.Model):
 class Vote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    vote = models.PositiveIntegerField(
+    score = models.PositiveIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)], null=False, blank=False
     )
 
