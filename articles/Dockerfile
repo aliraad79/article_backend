@@ -5,21 +5,15 @@ ENV PYTHONFAULTHANDLER=1 \
   PYTHONHASHSEED=random \
   PIP_NO_CACHE_DIR=off \
   PIP_DISABLE_PIP_VERSION_CHECK=on \
-  PIP_DEFAULT_TIMEOUT=100 \
-  POETRY_VERSION=1.4.0 \
-  POETRY_HOME=/opt/poetry \
-  POETRY_VIRTUALENVS_CREATE=false
+  PIP_DEFAULT_TIMEOUT=100
 ENV PATH="$POETRY_HOME/bin:$PATH"
-
-# Prepare poetry
-RUN curl -sSL https://install.python-poetry.org | python3 -
 
 # Copy only requirements to cache them in docker layer
 WORKDIR /code
-COPY poetry.lock pyproject.toml /code/
+COPY requirements.txt /code/
 
 # Project initialization:
-RUN poetry install --no-root
+RUN pip install -r requirements.txt
 
 # Copy the Django project files
 COPY . articles/
