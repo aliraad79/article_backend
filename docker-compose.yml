@@ -23,9 +23,18 @@ services:
     build: articles
     command: celery -A articles worker --loglevel=info --concurrency=4
     depends_on:
-      - web
       - redis
     environment:
       - DJANGO_SETTINGS_MODULE=articles.settings
       - CELERY_BROKER_URL=redis://redis:6379
       - CELERY_RESULT_BACKEND=redis://redis:6379
+  
+  celery-beat:
+    build: articles
+    command: celery -A core beat -l info
+    environment:
+      - DJANGO_SETTINGS_MODULE=articles.settings
+      - CELERY_BROKER_URL=redis://redis:6379
+      - CELERY_RESULT_BACKEND=redis://redis:6379
+    depends_on:
+      - redis

@@ -20,7 +20,7 @@ class Article(models.Model):
 
     def update_statics(self):
         self.number_of_scores = self.vote_set.count()
-        self.avg_scores = self.vote_set.aggregate(Avg("score"))["score__avg"]
+        self.avg_scores = self.vote_set.filter(is_disable=False).aggregate(Avg("score"))["score__avg"]
         self.save()
 
     def __str__(self):
@@ -33,6 +33,9 @@ class Vote(models.Model):
     score = models.PositiveIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)], null=False, blank=False
     )
+
+    is_disable = models.BooleanField(default=False)
+    disable_unitll = models.DateTimeField(auto_now=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -12,9 +12,9 @@ env = environ.Env(
     DB_NAME=(str, "articles"),
     DB_USERNAME=(str, "postgres"),
     DB_PASSWORD=(str, "postgres"),
-    DB_URL=(str, "localhost"),
+    DB_URL=(str, "db"),
     DB_PORT=(str, "5432"),
-    REDIS_URL=(str, "redis://localhost:6379"),
+    REDIS_URL=(str, "redis://redis:6379"),
 )
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
@@ -141,3 +141,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # celery setting
 CELERY_BROKER_URL = env("REDIS_URL")
 CELERY_RESULT_BACKEND = env("REDIS_URL")
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
