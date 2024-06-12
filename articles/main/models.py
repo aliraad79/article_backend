@@ -12,7 +12,6 @@ class User(models.Model):
 
 class Article(models.Model):
     title = models.CharField(max_length=256)
-    text = models.TextField()
     number_of_scores = models.PositiveBigIntegerField(default=0)
     avg_scores = models.FloatField(default=2.5)
 
@@ -32,5 +31,8 @@ class Vote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     vote = models.PositiveIntegerField(
-        default=5, validators=[MinValueValidator(1), MaxValueValidator(5)]
+        validators=[MinValueValidator(1), MaxValueValidator(5)], null=False, blank=False
     )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
